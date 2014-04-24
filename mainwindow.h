@@ -15,8 +15,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    void on_lineEdit_editingFinished();
+
 private:
     Ui::MainWindow *ui;
+    QString unfilteredText;
+    QString lastQuery;
 };
 
 #endif // MAINWINDOW_H
