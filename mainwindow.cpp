@@ -31,8 +31,10 @@ void MainWindow::on_lineEdit_editingFinished()
         ui->plainTextEdit->setReadOnly(false);
         ui->plainTextEdit->setPlainText(unfilteredText);
     } else {
-        ui->plainTextEdit->setReadOnly(true);
-        unfilteredText = ui->plainTextEdit->toPlainText();
+        if (lastQuery.isEmpty()) {
+            ui->plainTextEdit->setReadOnly(true);
+            unfilteredText = ui->plainTextEdit->toPlainText();
+        }
 
         QString filteredText;
         QTextStream stream(&unfilteredText);
@@ -45,4 +47,6 @@ void MainWindow::on_lineEdit_editingFinished()
 
         ui->plainTextEdit->setPlainText(filteredText);
     }
+
+    lastQuery = query;
 }
