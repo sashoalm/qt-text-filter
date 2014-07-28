@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QTextStream>
 #include <QTimer>
+#include <QRegExp>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->setInterval(1000);
     connect(ui->lineEdit, SIGNAL(textEdited(QString)), timer, SLOT(start()));
     connect(timer, SIGNAL(timeout()), this, SLOT(on_lineEdit_editingFinished()));
+    connect(ui->checkBox, SIGNAL(clicked()), SLOT(on_lineEdit_editingFinished()));
     normalPalette = ui->plainTextEdit->palette();
     readOnlyPalette = normalPalette;
     readOnlyPalette.setColor(QPalette::Base, palette().color(QPalette::Window));
@@ -26,7 +28,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_lineEdit_editingFinished()
 {
     const QString &query = ui->lineEdit->text();
-    if (query == lastQuery) {
+    if (query == lastQuery && sender() != ui->checkBox) {
         return;
     }
 
@@ -43,10 +45,21 @@ void MainWindow::on_lineEdit_editingFinished()
 
         QString filteredText;
         QTextStream stream(&unfilteredText);
-        while (!stream.atEnd()) {
-            const QString &line = stream.readLine();
-            if (line.contains(query)) {
-                filteredText.append(line + "\n");
+
+        if (ui->checkBox->isChecked()) {
+            QRegExp regex(query);
+            while (!stream.atEnd()) {
+                const QString &line = stream.readLine();
+                if (line.contains(regex)) {
+                    filteredText.append(line + "\n");
+                }
+            }
+        } else {
+            while (!stream.atEnd()) {
+                const QString &line = stream.readLine();
+                if (line.contains(query)) {
+                    filteredText.append(line + "\n");
+                }
             }
         }
 

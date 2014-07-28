@@ -19,6 +19,16 @@
      <widget class="QLineEdit" name="lineEdit"/>
     </item>
     <item>
+     <widget class="QCheckBox" name="checkBox">
+      <property name="text">
+       <string>Regular expression</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPlainTextEdit" name="plainTextEdit">
       <property name="lineWrapMode">
        <enum>QPlainTextEdit::NoWrap</enum>
