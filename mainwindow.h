@@ -22,6 +22,8 @@ private:
     Ui::MainWindow *ui;
     QString unfilteredText;
     QString lastQuery;
+    QPalette normalPalette;
+    QPalette readOnlyPalette;
 };
 
 #endif // MAINWINDOW_H

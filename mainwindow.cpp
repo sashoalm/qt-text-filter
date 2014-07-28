@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->setInterval(1000);
     connect(ui->lineEdit, SIGNAL(textEdited(QString)), timer, SLOT(start()));
     connect(timer, SIGNAL(timeout()), this, SLOT(on_lineEdit_editingFinished()));
+    normalPalette = ui->plainTextEdit->palette();
+    readOnlyPalette = normalPalette;
+    readOnlyPalette.setColor(QPalette::Base, palette().color(QPalette::Window));
 }
 
 MainWindow::~MainWindow()
@@ -29,10 +32,12 @@ void MainWindow::on_lineEdit_editingFinished()
 
     if (query.isEmpty()) {
         ui->plainTextEdit->setReadOnly(false);
+        ui->plainTextEdit->setPalette(normalPalette);
         ui->plainTextEdit->setPlainText(unfilteredText);
     } else {
         if (lastQuery.isEmpty()) {
             ui->plainTextEdit->setReadOnly(true);
+            ui->plainTextEdit->setPalette(readOnlyPalette);
             unfilteredText = ui->plainTextEdit->toPlainText();
         }
 
