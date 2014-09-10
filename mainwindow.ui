@@ -14,12 +14,9 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QLineEdit" name="lineEdit"/>
-    </item>
-    <item>
-     <widget class="QCheckBox" name="checkBox">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="2" column="0">
+     <widget class="QCheckBox" name="checkBoxRegex">
       <property name="text">
        <string>Regular expression</string>
       </property>
@@ -28,12 +25,25 @@
       </property>
      </widget>
     </item>
-    <item>
+    <item row="2" column="1">
+     <widget class="QCheckBox" name="checkBoxIgnoreCase">
+      <property name="text">
+       <string>Ignore case</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="2">
      <widget class="QPlainTextEdit" name="plainTextEdit">
       <property name="lineWrapMode">
        <enum>QPlainTextEdit::NoWrap</enum>
       </property>
      </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QLineEdit" name="lineEdit"/>
     </item>
    </layout>
   </widget>
@@ -43,7 +53,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
