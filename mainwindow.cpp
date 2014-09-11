@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QTimer *timer = new QTimer(this);
+    timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(1000);
     connect(ui->lineEdit, SIGNAL(textEdited(QString)), timer, SLOT(start()));
@@ -29,7 +29,13 @@ MainWindow::~MainWindow()
 void MainWindow::on_lineEdit_editingFinished()
 {
     const QString &query = ui->lineEdit->text();
-    if (query == lastQuery && sender() != ui->checkBoxRegex) {
+
+    // Don't repeat the search if query has not changed. Note that if the slot
+    // was called because the "Ignore case" or "Regular expression" checkbox
+    // was toggled, then we need to repeat the search EVEN IF the query is
+    // unchanged, that is why we check that "sender() == timer" (this means
+    // the slot was indeed called because the user has finished typing.
+    if (query == lastQuery && sender() == timer) {
         return;
     }
 

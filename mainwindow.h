@@ -26,6 +26,7 @@ private:
     QString lastQuery;
     QPalette normalPalette;
     QPalette readOnlyPalette;
+    QTimer *timer;
 };
 
 #endif // MAINWINDOW_H
