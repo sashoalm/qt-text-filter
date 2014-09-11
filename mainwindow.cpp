@@ -53,26 +53,53 @@ void MainWindow::on_lineEdit_editingFinished()
         QString filteredText;
         QTextStream stream(&unfilteredText);
 
-        if (ui->checkBoxRegex->isChecked()) {
-            QRegExp regex(query);
+        bool useRegex = ui->checkBoxRegex->isChecked();
+        QRegExp regex;
+        if (useRegex) {
+            regex.setPattern(query);
             regex.setCaseSensitivity(ui->checkBoxIgnoreCase->isChecked()
                                      ? Qt::CaseInsensitive : Qt::CaseSensitive);
-            while (!stream.atEnd()) {
-                const QString &line = stream.readLine();
-                if (line.contains(regex)) {
-                    filteredText.append(line + "\n");
+        }
+
+        while (!stream.atEnd()) {
+            const QString &line = stream.readLine();
+
+            int pos = 0;
+            bool hasMatch = false;
+
+            // We will highlight all the matches using a yellow background color.
+            // Note that even if the search pattern appears more than once on the same line,
+            // every occurence will be highlighted in yellow, not just the first one.
+            for(;;) {
+                int nextPos = useRegex ? regex.indexIn(line, pos) : line.indexOf(query, pos);
+                if (-1 == nextPos) {
+                    break;
                 }
+
+                if (!hasMatch) {
+                    hasMatch = true;
+                }
+
+                // Add anything to the left of the matched string.
+                int len = useRegex ? regex.matchedLength() : query.size();
+                filteredText.append(Qt::escape(line.mid(pos, nextPos - pos)));
+
+                // Add the matched string itself (in yellow background).
+                filteredText.append("<span style=\"background:#FFFF00\">");
+                filteredText.append(Qt::escape(line.mid(nextPos, len)));
+                filteredText.append("</span>");
+
+                pos = nextPos + len;
             }
-        } else {
-            while (!stream.atEnd()) {
-                const QString &line = stream.readLine();
-                if (line.contains(query)) {
-                    filteredText.append(line + "\n");
-                }
+
+            if (hasMatch) {
+                filteredText.append(Qt::escape(line.mid(pos)));
+                filteredText.append("<br>");
             }
         }
 
-        ui->plainTextEdit->setPlainText(filteredText);
+        ui->plainTextEdit->setPlainText("");
+        ui->plainTextEdit->appendHtml(filteredText);
     }
 
     lastQuery = query;
