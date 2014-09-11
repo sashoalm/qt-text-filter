@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->lineEdit, SIGNAL(textEdited(QString)), timer, SLOT(start()));
     connect(timer, SIGNAL(timeout()), this, SLOT(on_lineEdit_editingFinished()));
     connect(ui->checkBoxRegex, SIGNAL(clicked()), SLOT(on_lineEdit_editingFinished()));
+    connect(ui->checkBoxIgnoreCase, SIGNAL(clicked()), SLOT(on_lineEdit_editingFinished()));
     normalPalette = ui->plainTextEdit->palette();
     readOnlyPalette = normalPalette;
     readOnlyPalette.setColor(QPalette::Base, palette().color(QPalette::Window));
