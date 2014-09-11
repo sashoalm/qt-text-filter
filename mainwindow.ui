@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>404</width>
     <height>300</height>
    </rect>
   </property>
@@ -35,15 +35,22 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0" colspan="2">
+    <item row="2" column="2">
+     <widget class="QCheckBox" name="checkBoxWordWrap">
+      <property name="text">
+       <string>Word wrap</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="3">
+     <widget class="QLineEdit" name="lineEdit"/>
+    </item>
+    <item row="4" column="0" colspan="3">
      <widget class="QPlainTextEdit" name="plainTextEdit">
       <property name="lineWrapMode">
        <enum>QPlainTextEdit::NoWrap</enum>
       </property>
      </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QLineEdit" name="lineEdit"/>
     </item>
    </layout>
   </widget>
@@ -52,8 +59,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
-     <height>24</height>
+     <width>404</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

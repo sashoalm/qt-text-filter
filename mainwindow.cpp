@@ -70,3 +70,8 @@ void MainWindow::on_lineEdit_editingFinished()
 
     lastQuery = query;
 }
+
+void MainWindow::on_checkBoxWordWrap_toggled(bool checked)
+{
+    ui->plainTextEdit->setLineWrapMode(checked ? QPlainTextEdit::WidgetWidth : QPlainTextEdit::NoWrap);
+}

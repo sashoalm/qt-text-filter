@@ -18,6 +18,8 @@ public:
 private slots:
     void on_lineEdit_editingFinished();
 
+    void on_checkBoxWordWrap_toggled(bool checked);
+
 private:
     Ui::MainWindow *ui;
     QString unfilteredText;
