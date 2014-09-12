@@ -26,6 +26,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// This will work for both Qt4 and Qt5.
+static QString escapeHtml(QString s)
+{
+#if QT_VERSION >= 0x050000
+    return s.toHtmlEscaped();
+#else
+    return Qt::escape(s);
+#endif
+}
+
 void MainWindow::on_lineEdit_editingFinished()
 {
     const QString &query = ui->lineEdit->text();
@@ -82,18 +92,18 @@ void MainWindow::on_lineEdit_editingFinished()
 
                 // Add anything to the left of the matched string.
                 int len = useRegex ? regex.matchedLength() : query.size();
-                filteredText.append(Qt::escape(line.mid(pos, nextPos - pos)));
+                filteredText.append(escapeHtml(line.mid(pos, nextPos - pos)));
 
                 // Add the matched string itself (in yellow background).
                 filteredText.append("<span style=\"background:#FFFF00\">");
-                filteredText.append(Qt::escape(line.mid(nextPos, len)));
+                filteredText.append(escapeHtml(line.mid(nextPos, len)));
                 filteredText.append("</span>");
 
                 pos = nextPos + len;
             }
 
             if (hasMatch) {
-                filteredText.append(Qt::escape(line.mid(pos)));
+                filteredText.append(escapeHtml(line.mid(pos)));
                 filteredText.append("<br>");
             }
         }
