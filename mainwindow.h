@@ -21,6 +21,8 @@ private slots:
     void on_checkBoxWordWrap_toggled(bool checked);
 
 private:
+    bool eventFilter(QObject *obj, QEvent *event);
+
     Ui::MainWindow *ui;
     QString unfilteredText;
     QString lastQuery;

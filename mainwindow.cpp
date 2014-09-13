@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     normalPalette = ui->plainTextEdit->palette();
     readOnlyPalette = normalPalette;
     readOnlyPalette.setColor(QPalette::Base, palette().color(QPalette::Window));
+    ui->plainTextEdit->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -33,6 +34,38 @@ static QString escapeHtml(QString s)
     return s.toHtmlEscaped();
 #else
     return Qt::escape(s);
+#endif
+}
+
+// QPlainTextEdit::ZoomIn is not available in Qt4
+// so we need to use a wrapper function.
+static void zoomIn(QPlainTextEdit *w)
+{
+#if QT_VERSION >= 0x050000
+    w->zoomIn();
+#else
+    QFont f = w->font();
+    const int newSize = f.pointSize() + 1;
+    if (newSize <= 0)
+        return;
+    f.setPointSize(newSize);
+    w->setFont(f);
+#endif
+}
+
+// QPlainTextEdit::ZoomOut is not available in Qt4
+// so we need to use a wrapper function.
+static void zoomOut(QPlainTextEdit *w)
+{
+#if QT_VERSION >= 0x050000
+    w->zoomOut();
+#else
+    QFont f = w->font();
+    const int newSize = f.pointSize() - 1;
+    if (newSize <= 0)
+        return;
+    f.setPointSize(newSize);
+    w->setFont(f);
 #endif
 }
 
@@ -118,4 +151,24 @@ void MainWindow::on_lineEdit_editingFinished()
 void MainWindow::on_checkBoxWordWrap_toggled(bool checked)
 {
     ui->plainTextEdit->setLineWrapMode(checked ? QPlainTextEdit::WidgetWidth : QPlainTextEdit::NoWrap);
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    // Enable Zoom In/Zoom Out on Ctrl+Wheel.
+    if(obj == ui->plainTextEdit && event->type() == QEvent::Wheel ) {
+        QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
+        if( wheelEvent->modifiers() == Qt::ControlModifier ){
+            if (wheelEvent->delta() > 0) {
+                zoomIn(ui->plainTextEdit);
+            } else {
+                zoomOut(ui->plainTextEdit);
+            }
+            // Since we handled this event, return true so it doesn't get sent
+            // to the plain text edit.
+            return true;
+        }
+    }
+
+    return QMainWindow::eventFilter(obj, event);
 }
