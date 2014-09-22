@@ -125,6 +125,18 @@ void MainWindow::on_lineEdit_editingFinished()
 
                 // Add anything to the left of the matched string.
                 int len = useRegex ? regex.matchedLength() : query.size();
+
+                // Some regular expressions can match even an empty string.
+                // Examples: "|", "a|", etc. We do not want that, because it
+                // will cause the program to endlessly insert <span></span>,
+                // until its memory usage rises and eventually it crashes. So
+                // if we ever match an empty pattern, we treat the regex as
+                // invalid and abort.
+                if (len <= 0) {
+                    filteredText = "";
+                    goto label_exit_double_loop;
+                }
+
                 filteredText.append(escapeHtml(line.mid(pos, nextPos - pos)));
 
                 // Add the matched string itself (in yellow background).
@@ -141,6 +153,7 @@ void MainWindow::on_lineEdit_editingFinished()
             }
         }
 
+label_exit_double_loop:
         ui->plainTextEdit->setPlainText("");
         ui->plainTextEdit->appendHtml(filteredText);
     }
