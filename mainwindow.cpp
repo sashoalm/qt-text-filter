@@ -73,12 +73,20 @@ void MainWindow::on_lineEdit_editingFinished()
 {
     const QString &query = ui->lineEdit->text();
 
+    // We need this for a corner case: if the user enters some text in the text
+    // box below (but NOT in the query box), and then clicks on the Regex or
+    // IngCase checkbox, the text will disappear. This here 'if' takes care of
+    // that corner-case.
+    if (query.isEmpty() && lastQuery.isEmpty()) {
+        return;
+    }
+
     // Don't repeat the search if query has not changed. Note that if the slot
     // was called because the "Ignore case" or "Regular expression" checkbox
     // was toggled, then we need to repeat the search EVEN IF the query is
     // unchanged, that is why we check that "sender() == timer" (this means
     // the slot was indeed called because the user has finished typing.
-    if (query == lastQuery && sender() == timer) {
+    if (query == lastQuery && !sender()->inherits("QCheckBox")) {
         return;
     }
 
