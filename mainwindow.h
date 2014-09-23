@@ -22,6 +22,8 @@ private slots:
 
 private:
     bool eventFilter(QObject *obj, QEvent *event);
+    void loadSettings();
+    void saveSettings();
 
     Ui::MainWindow *ui;
     QString unfilteredText;

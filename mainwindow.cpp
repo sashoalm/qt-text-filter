@@ -3,6 +3,7 @@
 #include <QTextStream>
 #include <QTimer>
 #include <QRegExp>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,10 +21,12 @@ MainWindow::MainWindow(QWidget *parent) :
     readOnlyPalette = normalPalette;
     readOnlyPalette.setColor(QPalette::Base, palette().color(QPalette::Window));
     ui->plainTextEdit->installEventFilter(this);
+    loadSettings();
 }
 
 MainWindow::~MainWindow()
 {
+    saveSettings();
     delete ui;
 }
 
@@ -192,4 +195,20 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     }
 
     return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::loadSettings()
+{
+    QSettings settings;
+    ui->checkBoxIgnoreCase->setChecked(settings.value("IgnoreCase", true).toBool());
+    ui->checkBoxRegex->setChecked(settings.value("Regex", true).toBool());
+    ui->checkBoxWordWrap->setChecked(settings.value("WordWrap", false).toBool());
+}
+
+void MainWindow::saveSettings()
+{
+    QSettings settings;
+    settings.setValue("IgnoreCase", ui->checkBoxIgnoreCase->isChecked());
+    settings.setValue("Regex", ui->checkBoxRegex->isChecked());
+    settings.setValue("WordWrap", ui->checkBoxWordWrap->isChecked());
 }
